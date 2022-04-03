@@ -1,0 +1,19 @@
+{
+  "name": "stream-csv-to-json",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "lint": "standard *.js -v --fix | snazzy",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "snazzy": "^9.0.0",
+    "standard": "^16.0.4"
+  }
+}
