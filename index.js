@@ -1,4 +1,3 @@
-/* global performance: false */
 /**
  * Stream CSV file to JSON.
  * @example `npm run dev your/file.csv`
@@ -9,10 +8,10 @@
 import { createReadStream } from 'fs'
 import { writeFile } from 'fs/promises'
 import { createInterface } from 'readline'
-import { createHash, randomUUID } from 'crypto'
-// const {
-//   createHash
-// } = await import('crypto')
+import {
+  // randomUUID,
+  // createHash
+} from 'crypto'
 
 /**
  * Normalize key names from file header.
@@ -42,21 +41,8 @@ const checksum = async values => {
  * @param {Array} collection
  */
 // const writeCompleteJSON = async collection => {
-//   performance.mark('start:stringify-complete-json')
 //   const stringed = JSON.stringify(collection, null, 2)
-//   performance.mark('end:stringify-complete-json')
-//   performance.measure('stringify-complete-json', {
-//     start: 'start:stringify-complete-json',
-//     end: 'end:stringify-complete-json'
-//   })
-//   // write entire collection to standard `json` file.
-//   performance.mark('start:write-complete-json')
 //   await writeFile(`${filePath}.json`, stringed)
-//   performance.mark('end:write-complete-json')
-//   performance.measure('write-complete-json', {
-//     start: 'start:write-complete-json',
-//     end: 'end:write-complete-json'
-//   })
 // }
 
 let keyNames
@@ -96,7 +82,6 @@ async function processLineByLine (filePath) {
       console.log(`Key names: ${keyNames.join(',')}`)
       continue
     }
-    performance.mark(`start:line:${nonce}`)
     const lineData = line.split(',').map((element, index) => {
       // remove double quotes and wrapping whitespace
       const cleaned = element.replace(/"/g, '').trim()
@@ -106,7 +91,6 @@ async function processLineByLine (filePath) {
     })
     const data = Object.assign({}, ...lineData)
 
-    performance.mark(`start:uuid:${nonce}`)
     /**
      * Method 1: UUID as simple nonce.
      */
@@ -123,9 +107,7 @@ async function processLineByLine (filePath) {
     data.uuid = await checksum(
       Object.values(data)
     )
-    performance.mark(`end:uuid:${nonce}`)
 
-    performance.mark(`end:line:${nonce}`)
     // write (or amend) each line to `ndjson` file.
     await writeFile(`${filePath}.ndjson`, `${JSON.stringify(data)}\n`, { flag: 'a' })
 
@@ -133,19 +115,8 @@ async function processLineByLine (filePath) {
     collection.push(data)
     // Each line in input.txt will be successively available here as `line`.
     // console.log(`Line ${nonce} from file: ${JSON.stringify(data)}`)
-
-    // save some metrics
-    performance.measure(`line:${nonce}`, {
-      start: `start:line:${nonce}`,
-      end: `end:line:${nonce}`
-    })
-    performance.measure(`uuid:${nonce}`, {
-      start: `start:uuid:${nonce}`,
-      end: `end:uuid:${nonce}`
-    })
   }
 
-  await writeFile(`performance.json`, JSON.stringify(performance.getEntries(), null, 2))
   console.log('Process Complete.')
 }
 
