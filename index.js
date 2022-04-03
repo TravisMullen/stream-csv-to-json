@@ -91,9 +91,6 @@ async function processLineByLine (filePath) {
   for await (const line of rl) {
     // increment nonce with each new line
     ++nonce
-    if (nonce > 1000) {
-      continue
-    }
     if (nonce === 1) {
       keyNames = line.split(',').map(item => normalizeKeys(item))
       console.log(`Key names: ${keyNames.join(',')}`)
@@ -130,7 +127,7 @@ async function processLineByLine (filePath) {
 
     performance.mark(`end:line:${nonce}`)
     // write (or amend) each line to `ndjson` file.
-    await writeFile(`${filePath}-m3.ndjson`, `${JSON.stringify(data)}\n`, { flag: 'a' })
+    await writeFile(`${filePath}.ndjson`, `${JSON.stringify(data)}\n`, { flag: 'a' })
 
     // stash this for later
     collection.push(data)
@@ -148,7 +145,7 @@ async function processLineByLine (filePath) {
     })
   }
 
-  await writeFile(`performance-m3.json`, JSON.stringify(performance.getEntries(), null, 2))
+  await writeFile(`performance.json`, JSON.stringify(performance.getEntries(), null, 2))
   console.log('Process Complete.')
 }
 
